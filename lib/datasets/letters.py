@@ -23,7 +23,7 @@ class letters(imdb):
         self._data_path = os.path.join(self._devkit_path, 'data')
         self._classes = ('__background__', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '(', ')', ',', '-', "'")
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
-        self._image_ext = ['.png']
+        self._image_ext = '.png'
         self._image_index = self._load_image_set_index()
         self._salt = str(uuid.uuid4())
         self._comp_id = 'comp4'
@@ -50,9 +50,7 @@ class letters(imdb):
         """
         Construct an image path from the image's "index" identifier.
         """
-        for ext in self._image_ext:
-            image_path = os.path.join(self._data_path, 'Images',
-                                  index + ext)
+        image_path = os.path.join(self._data_path, 'Images', index + self._image_ext)
             if os.path.exists(image_path):
                 break
         assert os.path.exists(image_path), \
@@ -65,8 +63,7 @@ class letters(imdb):
         """
         # Example path to image set file:
         # self._data_path + /ImageSets/val.txt
-        image_set_file = os.path.join(self._data_path, 'ImageSets', 
-                                      self._image_set + '.txt')
+        image_set_file = os.path.join(self._data_path, 'ImageSets', self._image_set + '.txt')
         assert os.path.exists(image_set_file), \
                 'Path does not exist: {}'.format(image_set_file)
         with open(image_set_file,'r') as f:
