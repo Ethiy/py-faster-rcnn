@@ -5,14 +5,12 @@
 import os
 import errno
 from datasets.imdb import imdb
-import xml.dom.minidom as minidom
 import numpy as np
-import scipy.sparse
-import scipy.io as sio
 import utils.cython_bbox
 import cPickle
 import subprocess
 import uuid
+import scipy.sparse
 from letters_eval import letters_eval
 
 class letters(imdb):
@@ -64,8 +62,8 @@ class letters(imdb):
         image_set_file = os.path.join(self._data_path, 'ImageSets', self._image_set + '.txt')
         assert os.path.exists(image_set_file), \
                 'Path does not exist: {}'.format(image_set_file)
-        with open(image_set_file,'r') as f:
-            image_index = [x.strip() for x in f.readlines()]
+        with open( image_set_file, 'r') as f:
+            image_index = map( str.strip, f.readlines()]
         return image_index
 
     def gt_roidb(self):
@@ -80,8 +78,7 @@ class letters(imdb):
             print '{} gt roidb loaded from {}'.format(self.name, cache_file)
             return roidb
 
-        gt_roidb = [self._load_letters_annotation(index)
-                    for index in self.image_index]
+        gt_roidb = map( self._load_letters_annotation, self.image_index)
         with open(cache_file, 'wb') as fid:
             cPickle.dump(gt_roidb, fid, cPickle.HIGHEST_PROTOCOL)
         print 'wrote gt roidb to {}'.format(cache_file)
@@ -92,7 +89,6 @@ class letters(imdb):
         gt_roidb = self.gt_roidb()
         rpn_roidb = self._load_rpn_roidb(gt_roidb)
         roidb = imdb.merge_roidbs(gt_roidb, rpn_roidb)
-        #roidb = self._load_rpn_roidb(None)
         return roidb
 
     def _load_rpn_roidb(self, gt_roidb):
@@ -109,37 +105,20 @@ class letters(imdb):
         Load image and bounding boxes info from txt files of Letters.
         """
         filename = os.path.join(self._data_path, 'Annotations', index + '.txt')
-        # print 'Loading: {}'.format(filename)
-	with open(filename) as f:
-            data = f.read()
-	import re
-	objs = re.findall('\(\d+, \d+\)[\s\-]+\(\d+, \d+\)', data)
-
-        num_objs = len(objs)
-
-        boxes = np.zeros((num_objs, 4), dtype=np.uint16)
-        gt_classes = np.zeros((num_objs), dtype=np.int32)
-        overlaps = np.zeros((num_objs, self.num_classes), dtype=np.float32)
-
-        # "Seg" area here is just the box area
-        seg_areas = np.zeros((num_objs), dtype=np.float32)
-
-        # Load object bounding boxes into a data frame.
-        for ix, obj in enumerate(objs):
-            # Make pixel indexes 0-based
-	    coor = re.findall('\d+', obj)
-            x1 = float(coor[0])
-            y1 = float(coor[1])
-            x2 = float(coor[2])
-            y2 = float(coor[3])
-            cls = self._class_to_ind['person']
-            boxes[ix, :] = [x1, y1, x2, y2]
-            gt_classes[ix] = cls
-            overlaps[ix, cls] = 1.0
-            seg_areas[ix] = (x2 - x1 + 1) * (y2 - y1 + 1)
-
-        overlaps = scipy.sparse.csr_matrix(overlaps)
-
+        
+        with open( filename, 'r') as annot:
+            lines = annot.readlines()
+            lines = map( str.strip, lines) # ignore EOL
+            lines = filter( lambda x: x != '', lines) # ignore empty lines
+            elements = map( lambda x:x.split(' '), lines) # splitting each line
+            elements = map( lambda x:filter(lambda y: y != '', x), elements) # ignoring empty entries
+            elements = filter( lambda x: len(x) != 5, elements) # filtering corrupted annotation
+            elements = np.array( map( lambda x: map( lambda y:float(y), x), elements) ) # str -> int to all entries
+            gt_classes = np.array( elements[ :, 0] ,dtype=np.uint16)
+            boxes = np.array( elements[ :, 1:], dtype = np.uint32)
+            overlaps = scipy.sparse.csr_matrix( np.array( map(lambda x:list(np.eye(1,42,x)), gt_classes), dtype = np.float32))
+            seg_areas = np.apply_along_axis( lambda x:(np.float32(x[1]) - np.float32(x[0]) + 1)*(np.float32(x[3])-np.float32(x[2])+1), 1, boxes)
+        
         return {'boxes' : boxes,
                 'gt_classes': gt_classes,
                 'gt_overlaps' : overlaps,
