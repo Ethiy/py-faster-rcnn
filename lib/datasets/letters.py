@@ -112,7 +112,7 @@ class letters(imdb):
             lines = filter( lambda x: x != '', lines) # ignore empty lines
             elements = map( lambda x:x.split(' '), lines) # splitting each line
             elements = map( lambda x:filter(lambda y: y != '', x), elements) # ignoring empty entries
-            elements = filter( lambda x: len(x) != 5, elements) # filtering corrupted annotation
+            elements = filter( lambda x: len(x) == 5, elements) # filtering corrupted annotation
             elements = np.array( map( lambda x: map( lambda y:float(y), x), elements) ) # str -> int to all entries
             gt_classes = np.array( elements[ :, 0] ,dtype=np.uint16)
             boxes = np.array( elements[ :, 1:], dtype = np.uint32)
