@@ -116,7 +116,7 @@ class letters(imdb):
             elements = np.array( map( lambda x: map( lambda y:float(y), x), elements) ) # str -> int to all entries
             gt_classes = np.array( elements[ :, 0] ,dtype=np.uint16)
             boxes = np.array( elements[ :, 1:], dtype = np.uint32)
-            overlaps = scipy.sparse.csr_matrix( np.array( map(lambda x:list(np.eye(1,42,x)), gt_classes), dtype = np.float32))
+            overlaps = scipy.sparse.csr_matrix( np.array( map(lambda x:list(np.eye(1,42,x))[0], gt_classes), dtype = np.float32))
             seg_areas = np.apply_along_axis( lambda x:(np.float32(x[1]) - np.float32(x[0]) + 1)*(np.float32(x[3])-np.float32(x[2])+1), 1, boxes)
         
         return {'boxes' : boxes,
