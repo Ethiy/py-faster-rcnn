@@ -63,7 +63,7 @@ class letters(imdb):
         assert os.path.exists(image_set_file), \
                 'Path does not exist: {}'.format(image_set_file)
         with open( image_set_file, 'r') as f:
-            image_index = map( str.strip, f.readlines()]
+            image_index = map( str.strip, f.readlines() )
         return image_index
 
     def gt_roidb(self):
