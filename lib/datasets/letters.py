@@ -20,6 +20,7 @@ class letters(imdb):
         self._devkit_path = devkit_path
         self._data_path = os.path.join(self._devkit_path, 'data')
         self._classes = ('__background__', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '(', ')', ',', '-', "'")
+        self.num_classes = len( self._classes )
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         self._image_ext = '.png'
         self._image_index = self._load_image_set_index()
@@ -115,7 +116,7 @@ class letters(imdb):
             elements = filter( lambda x: len(x) == 5, elements) # filtering corrupted annotation
             elements = map( lambda x:[ str( self._class_to_ind[x[0]] ) ]+x[1:], elements)
             elements = np.array( map( lambda x: map( lambda y:float(y), x), elements) ) # str -> int to all entries
-            gt_classes = np.array( elements[ :, 0] ,dtype=np.uint16)
+            gt_classes = np.array( map( lambda x:_class_to_ind[x], elements[ :, 0]) ,dtype=np.uint16)
             boxes = np.array( elements[ :, 1:], dtype = np.uint32)
             overlaps = scipy.sparse.csr_matrix( np.array( map(lambda x:list(np.eye(1,42,x))[0], gt_classes), dtype = np.float32))
             seg_areas = np.apply_along_axis( lambda x:(np.float32(x[1]) - np.float32(x[0]) + 1)*(np.float32(x[3])-np.float32(x[2])+1), 1, boxes)
