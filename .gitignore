@@ -16,4 +16,4 @@ output/*
 
 # models
 models/letters
-models/pascal_voc/Letters
+models/pascal_voc*
