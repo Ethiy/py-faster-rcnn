@@ -91,8 +91,8 @@ if __name__ == '__main__':
     cfg.TEST.HAS_RPN = True  # Use RPN for proposals
 
     args = parse_args()
-    prototxt = os.path.join(cfg.MODELS_DIR, 'letters', 'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
-    caffemodel = os.path.join(cfg.DATA_DIR, 'imagenet_models', 'VGG_CNN_M_1024.v2.caffemodel')
+    prototxt = os.path.join(cfg.MODELS_DIR, 'Letters', 'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
+    caffemodel = os.path.join(cfg.ROOT_DIR, 'output', 'default', 'letters_train', 'Letters_faster_rcnn_final.caffemodel')
 
     if args.cpu_mode:
         caffe.set_mode_cpu()
