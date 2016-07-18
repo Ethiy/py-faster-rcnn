@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-#COPYRIGHT (c) 2016 OUSSAMA ENNAFII ALL RIGHTS RESERVED
+# Copyright (c) 2016 Oussama ENNAFII
 
 import os
 import errno

@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+# Copyright (c) 2016 Oussama ENNAFII
 
 import os
 import re
