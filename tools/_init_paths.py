@@ -7,10 +7,7 @@
 
 """Set up paths for Fast R-CNN."""
 
-<<<<<<< HEAD
 import os
-=======
->>>>>>> parent of dc3b8df... debuging: __file__ -> os.getcwd()
 import os.path as osp
 import sys
 
