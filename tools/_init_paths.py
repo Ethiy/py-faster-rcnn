@@ -8,6 +8,7 @@
 """Set up paths for Fast R-CNN."""
 
 import os
+import os.path as osp
 import sys
 
 def add_path(path):
