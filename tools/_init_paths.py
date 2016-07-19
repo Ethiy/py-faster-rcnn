@@ -15,7 +15,7 @@ def add_path(path):
     if path not in sys.path:
         sys.path.insert(0, path)
 
-this_dir = os.getcwd()
+this_dir = osp.abspath( os.getcwd() )
 
 # Add caffe to PYTHONPATH
 caffe_path = osp.join(this_dir, '..', 'caffe-fast-rcnn', 'python')
