@@ -7,7 +7,10 @@
 
 """Set up paths for Fast R-CNN."""
 
+<<<<<<< HEAD
 import os
+=======
+>>>>>>> parent of dc3b8df... debuging: __file__ -> os.getcwd()
 import os.path as osp
 import sys
 
@@ -15,7 +18,7 @@ def add_path(path):
     if path not in sys.path:
         sys.path.insert(0, path)
 
-this_dir = os.getcwd()
+this_dir = osp.dirname(__file__)
 
 # Add caffe to PYTHONPATH
 caffe_path = osp.abspath( osp.join(this_dir, '..', 'caffe-fast-rcnn', 'python') )
