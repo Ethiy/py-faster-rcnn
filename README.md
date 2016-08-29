@@ -103,6 +103,7 @@ If you find Faster R-CNN useful in your research, please consider citing:
     # and your Makefile.config in place, then simply do:
     make -j8 && make pycaffe
     ```
+    Do not use cmake for installation as it does not work. 
 
 5. Download pre-computed Faster R-CNN detectors
     ```Shell
@@ -181,7 +182,7 @@ Output is written underneath `$FRCN_ROOT/output`.
 cd $FRCN_ROOT
 ./experiments/scripts/faster_rcnn_alt_opt.sh [GPU_ID] [NET] [--set ...]
 # GPU_ID is the GPU you want to train on
-# NET in {ZF, VGG_CNN_M_1024, VGG16} is the network arch to use
+# NET in {ZF, VGG_CNN_M_1024, VGG16} is the network arch to use. VGG16 does not load on AWS Graphic card.
 # --set ... allows you to specify fast_rcnn.config options, e.g.
 #   --set EXP_DIR seed_rng1701 RNG_SEED 1701
 ```
@@ -215,3 +216,13 @@ Test outputs are saved under:
 ```
 output/<experiment directory>/<dataset name>/<network snapshot name>/
 ```
+
+[This document](https://github.com/deboc/py-faster-rcnn/blob/master/help/Readme.md) is of great help also in order to configure R-CNN for any database.
+
+To visualize a test for some examples, use:
+
+```Shell
+./tools/detect_letters.py  [GPU_ID] [EXAMPLES]
+```
+
+You will get letter candidates localized in the image.
